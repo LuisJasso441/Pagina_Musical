@@ -37,6 +37,8 @@ mysqli_stmt_close($stmt);
 </head>
 <body>
 
+    <?php include 'navbar.php'; ?>
+
     <h1>Editar Artista</h1>
 
     <form action="actualizar_artista.php" method="POST">

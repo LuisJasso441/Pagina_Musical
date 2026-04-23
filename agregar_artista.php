@@ -8,6 +8,8 @@
 </head>
 <body>
 
+    <?php include 'navbar.php'; ?>
+    
     <h1>Agregar Nuevo Artista</h1>
 
     <form action="guardar_artista.php" method="POST">

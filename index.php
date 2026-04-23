@@ -16,6 +16,8 @@ $resultado = mysqli_query($conexion, $sql);
 </head>
 <body>
 
+    <?php include 'navbar.php'; ?>
+
     <h1>Mis Artistas</h1>
 
     <?php if (isset($_GET['mensaje'])): ?>
