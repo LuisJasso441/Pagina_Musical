@@ -1,5 +1,5 @@
 <?php
-require 'conexion.php';
+require '../conexion.php';
 
 $sql_artistas = "SELECT id, nombre FROM artistas ORDER BY nombre ASC";
 $resultado_artistas = mysqli_query($conexion, $sql_artistas);
@@ -10,15 +10,15 @@ $resultado_artistas = mysqli_query($conexion, $sql_artistas);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Álbum - Mi Música</title>
-    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="../css/estilos.css">
 </head>
 <body>
 
-    <?php include 'navbar.php'; ?>
+    <?php include '../navbar.php'; ?>
 
     <h1>Agregar Nuevo Álbum</h1>
 
-    <form action="guardar_album.php" method="POST" enctype="multipart/form-data">
+    <form action="guardar.php" method="POST" enctype="multipart/form-data">
 
         <label for="titulo">Título del álbum:</label>
         <input type="text" id="titulo" name="titulo" required>
@@ -49,7 +49,7 @@ $resultado_artistas = mysqli_query($conexion, $sql_artistas);
 
     </form>
 
-    <a href="albumes.php">← Volver a la lista de álbumes</a>
+    <a href="index.php">← Volver a la lista de álbumes</a>
 
 </body>
 </html>

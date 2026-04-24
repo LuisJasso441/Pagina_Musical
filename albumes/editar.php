@@ -1,8 +1,8 @@
 <?php
-require 'conexion.php';
+require '../conexion.php';
 
 if (!isset($_GET['id'])) {
-    header("Location: albumes.php");
+    header("Location: index.php");
     exit;
 }
 
@@ -16,7 +16,7 @@ $album = mysqli_fetch_assoc($resultado);
 mysqli_stmt_close($stmt);
 
 if (!$album) {
-    header("Location: albumes.php");
+    header("Location: index.php");
     exit;
 }
 
@@ -29,15 +29,15 @@ $resultado_artistas = mysqli_query($conexion, $sql_artistas);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Álbum - Mi Música</title>
-    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="../css/estilos.css">
 </head>
 <body>
 
-    <?php include 'navbar.php'; ?>
+    <?php include '../navbar.php'; ?>
 
     <h1>Editar Álbum</h1>
 
-    <form action="actualizar_album.php" method="POST" enctype="multipart/form-data">
+    <form action="actualizar.php" method="POST" enctype="multipart/form-data">
 
         <input type="hidden" name="id" value="<?php echo $album['id']; ?>">
 
@@ -63,7 +63,7 @@ $resultado_artistas = mysqli_query($conexion, $sql_artistas);
         <label for="imagen">Portada del álbum:</label>
         <?php if ($album['imagen']): ?>
             <div class="imagen-actual">
-                <img src="uploads/<?php echo $album['imagen']; ?>" alt="Portada actual" width="150">
+                <img src="../uploads/<?php echo $album['imagen']; ?>" alt="Portada actual" width="150">
                 <p>Portada actual. Selecciona otra imagen para reemplazarla.</p>
             </div>
         <?php endif; ?>
@@ -79,7 +79,7 @@ $resultado_artistas = mysqli_query($conexion, $sql_artistas);
 
     </form>
 
-    <a href="albumes.php">← Volver a la lista de álbumes</a>
+    <a href="index.php">← Volver a la lista de álbumes</a>
 
 </body>
 </html>

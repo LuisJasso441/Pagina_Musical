@@ -1,5 +1,5 @@
 <?php
-require 'conexion.php';
+require '../conexion.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     mysqli_stmt_bind_param($stmt, "ssiii", $titulo, $duracion, $album_id, $es_favorito, $id);
 
     if (mysqli_stmt_execute($stmt)) {
-        header("Location: canciones.php?mensaje=cancion_actualizada");
+        header("Location: index.php?mensaje=cancion_actualizada");
         exit;
     } else {
         echo "Error al actualizar: " . mysqli_error($conexion);
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     mysqli_stmt_close($stmt);
 
 } else {
-    header("Location: canciones.php");
+    header("Location: index.php");
     exit;
 }
 ?>

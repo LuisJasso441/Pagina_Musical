@@ -1,5 +1,5 @@
 <?php
-require 'conexion.php';
+require '../conexion.php';
 
 $sql = "SELECT albumes.*, artistas.nombre AS artista_nombre 
         FROM albumes 
@@ -13,13 +13,13 @@ $resultado = mysqli_query($conexion, $sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Música - Álbumes</title>
-    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="../css/estilos.css">
 </head>
 <body>
 
-    <?php include 'navbar.php'; ?>
+    <?php include '../navbar.php'; ?>
 
-    <h1>Mis Artistas</h1>
+    <h1>Mis Álbumes</h1>
 
     <?php if (isset($_GET['mensaje'])): ?>
         <?php if ($_GET['mensaje'] === 'album_guardado'): ?>
@@ -33,17 +33,16 @@ $resultado = mysqli_query($conexion, $sql);
         <?php endif; ?>
     <?php endif; ?>
 
-    <a href="agregar_album.php" class="btn">+ Agregar nuevo álbum</a>
+    <a href="agregar.php" class="btn">+ Agregar nuevo álbum</a>
 
     <?php if (mysqli_num_rows($resultado) > 0): ?>
 
         <div class="album-grid">
             <?php while ($album = mysqli_fetch_assoc($resultado)): ?>
                 <div class="album-card">
-
-                    <a href="detalle_album.php?id=<?php echo $album['id']; ?>" class="album-link">
+                    <a href="detalle.php?id=<?php echo $album['id']; ?>" class="album-link">
                         <?php if ($album['imagen']): ?>
-                            <img src="uploads/<?php echo $album['imagen']; ?>" 
+                            <img src="../uploads/<?php echo $album['imagen']; ?>" 
                                  alt="<?php echo htmlspecialchars($album['titulo']); ?>">
                         <?php else: ?>
                             <div class="album-sin-imagen">
@@ -51,10 +50,9 @@ $resultado = mysqli_query($conexion, $sql);
                             </div>
                         <?php endif; ?>
                     </a>
-
                     <div class="album-info">
                         <h3>
-                            <a href="detalle_album.php?id=<?php echo $album['id']; ?>">
+                            <a href="detalle.php?id=<?php echo $album['id']; ?>">
                                 <?php echo htmlspecialchars($album['titulo']); ?>
                             </a>
                         </h3>
@@ -64,15 +62,14 @@ $resultado = mysqli_query($conexion, $sql);
                             <?php echo $album['es_favorito'] ? ' ⭐' : ''; ?>
                         </p>
                         <div class="album-acciones">
-                            <a href="editar_album.php?id=<?php echo $album['id']; ?>">Editar</a>
-                            <a href="eliminar_album.php?id=<?php echo $album['id']; ?>"
+                            <a href="editar.php?id=<?php echo $album['id']; ?>">Editar</a>
+                            <a href="eliminar.php?id=<?php echo $album['id']; ?>"
                                class="btn-eliminar"
                                onclick="return confirm('¿Estás seguro de eliminar este álbum?')">
                                 Eliminar
                             </a>
                         </div>
                     </div>
-
                 </div>
             <?php endwhile; ?>
         </div>

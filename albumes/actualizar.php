@@ -1,5 +1,5 @@
 <?php
-require 'conexion.php';
+require '../conexion.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -8,8 +8,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $anio = $_POST['anio'];
     $artista_id = $_POST['artista_id'];
     $es_favorito = $_POST['es_favorito'];
-
-    // ===== PROCESAMIENTO DE LA IMAGEN =====
 
     $nombre_imagen = NULL;
     $imagen_nueva = false;
@@ -31,13 +29,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $nombre_imagen = 'album_' . time() . '_' . rand(1000, 9999) . '.' . $extension;
-        $destino = 'uploads/' . $nombre_imagen;
+        $destino = '../uploads/' . $nombre_imagen;
 
         if (!move_uploaded_file($archivo_temporal, $destino)) {
             die("Error: No se pudo guardar la imagen.");
         }
 
-        // Eliminamos la imagen anterior si existía
         $sql_img = "SELECT imagen FROM albumes WHERE id = ?";
         $stmt_img = mysqli_prepare($conexion, $sql_img);
         mysqli_stmt_bind_param($stmt_img, "i", $id);
@@ -46,28 +43,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $album_actual = mysqli_fetch_assoc($res_img);
         mysqli_stmt_close($stmt_img);
 
-        if ($album_actual['imagen'] && file_exists('uploads/' . $album_actual['imagen'])) {
-            unlink('uploads/' . $album_actual['imagen']);
+        if ($album_actual['imagen'] && file_exists('../uploads/' . $album_actual['imagen'])) {
+            unlink('../uploads/' . $album_actual['imagen']);
         }
 
         $imagen_nueva = true;
     }
-
-    // ===== ACTUALIZAR BASE DE DATOS =====
 
     if ($imagen_nueva) {
         $sql = "UPDATE albumes SET titulo = ?, anio = ?, artista_id = ?, es_favorito = ?, imagen = ? WHERE id = ?";
         $stmt = mysqli_prepare($conexion, $sql);
         mysqli_stmt_bind_param($stmt, "siiisi", $titulo, $anio, $artista_id, $es_favorito, $nombre_imagen, $id);
     } else {
-        // Si no subió imagen nueva, no tocamos la columna imagen
         $sql = "UPDATE albumes SET titulo = ?, anio = ?, artista_id = ?, es_favorito = ? WHERE id = ?";
         $stmt = mysqli_prepare($conexion, $sql);
         mysqli_stmt_bind_param($stmt, "siiii", $titulo, $anio, $artista_id, $es_favorito, $id);
     }
 
     if (mysqli_stmt_execute($stmt)) {
-        header("Location: albumes.php?mensaje=album_actualizado");
+        header("Location: index.php?mensaje=album_actualizado");
         exit;
     } else {
         echo "Error al actualizar: " . mysqli_error($conexion);
@@ -76,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     mysqli_stmt_close($stmt);
 
 } else {
-    header("Location: albumes.php");
+    header("Location: index.php");
     exit;
 }
 ?>

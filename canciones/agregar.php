@@ -1,8 +1,6 @@
 <?php
-// Conexión
-require 'conexion.php';
+require '../conexion.php';
 
-// Traemos álbumes CON el nombre del artista para el selector
 $sql_albumes = "SELECT albumes.id, albumes.titulo, artistas.nombre AS artista_nombre 
                 FROM albumes 
                 JOIN artistas ON albumes.artista_id = artistas.id 
@@ -15,15 +13,15 @@ $resultado_albumes = mysqli_query($conexion, $sql_albumes);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Canción - Mi Música</title>
-    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="../css/estilos.css">
 </head>
 <body>
 
-    <?php include 'navbar.php'; ?>
+    <?php include '../navbar.php'; ?>
 
     <h1>Agregar Nueva Canción</h1>
 
-    <form action="guardar_cancion.php" method="POST">
+    <form action="guardar.php" method="POST">
 
         <label for="titulo">Título de la canción:</label>
         <input type="text" id="titulo" name="titulo" required>
@@ -51,7 +49,7 @@ $resultado_albumes = mysqli_query($conexion, $sql_albumes);
 
     </form>
 
-    <a href="canciones.php">← Volver a la lista de canciones</a>
+    <a href="index.php">← Volver a la lista de canciones</a>
 
 </body>
 </html>

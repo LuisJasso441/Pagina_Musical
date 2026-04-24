@@ -1,5 +1,5 @@
 <?php
-require 'conexion.php';
+require '../conexion.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     mysqli_stmt_bind_param($stmt, "ssii", $titulo, $duracion, $album_id, $es_favorito);
 
     if (mysqli_stmt_execute($stmt)) {
-        header("Location: canciones.php?mensaje=cancion_guardada");
+        header("Location: index.php?mensaje=cancion_guardada");
         exit;
     } else {
         echo "Error al guardar: " . mysqli_error($conexion);
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     mysqli_stmt_close($stmt);
 
 } else {
-    header("Location: agregar_cancion.php");
+    header("Location: agregar.php");
     exit;
 }
 ?>

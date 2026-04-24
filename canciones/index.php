@@ -1,7 +1,6 @@
 <?php
-require 'conexion.php';
+require '../conexion.php';
 
-// Consulta con doble JOIN para traer álbum y artista
 $sql = "SELECT canciones.*, albumes.titulo AS album_titulo, artistas.nombre AS artista_nombre 
         FROM canciones 
         JOIN albumes ON canciones.album_id = albumes.id 
@@ -15,11 +14,11 @@ $resultado = mysqli_query($conexion, $sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Música - Canciones</title>
-    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="../css/estilos.css">
 </head>
 <body>
 
-    <?php include 'navbar.php'; ?>
+    <?php include '../navbar.php'; ?>
 
     <h1>Mis Canciones</h1>
 
@@ -33,7 +32,7 @@ $resultado = mysqli_query($conexion, $sql);
         <?php endif; ?>
     <?php endif; ?>
 
-    <a href="agregar_cancion.php" class="btn">+ Agregar nueva canción</a>
+    <a href="agregar.php" class="btn">+ Agregar nueva canción</a>
 
     <?php if (mysqli_num_rows($resultado) > 0): ?>
 
@@ -57,9 +56,9 @@ $resultado = mysqli_query($conexion, $sql);
                         <td><?php echo $cancion['duracion'] ? $cancion['duracion'] : '—'; ?></td>
                         <td><?php echo $cancion['es_favorito'] ? '⭐' : '—'; ?></td>
                         <td>
-                            <a href="editar_cancion.php?id=<?php echo $cancion['id']; ?>">Editar</a>
+                            <a href="editar.php?id=<?php echo $cancion['id']; ?>">Editar</a>
                             |
-                            <a href="eliminar_cancion.php?id=<?php echo $cancion['id']; ?>"
+                            <a href="eliminar.php?id=<?php echo $cancion['id']; ?>"
                                onclick="return confirm('¿Estás seguro de eliminar esta canción?')">
                                 Eliminar
                             </a>

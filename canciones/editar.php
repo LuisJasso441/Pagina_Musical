@@ -1,12 +1,11 @@
 <?php
-require 'conexion.php';
+require '../conexion.php';
 
 if (!isset($_GET['id'])) {
-    header("Location: canciones.php");
+    header("Location: index.php");
     exit;
 }
 
-// Buscamos la canción
 $id = $_GET['id'];
 $sql = "SELECT * FROM canciones WHERE id = ?";
 $stmt = mysqli_prepare($conexion, $sql);
@@ -17,11 +16,10 @@ $cancion = mysqli_fetch_assoc($resultado);
 mysqli_stmt_close($stmt);
 
 if (!$cancion) {
-    header("Location: canciones.php");
+    header("Location: index.php");
     exit;
 }
 
-// Traemos álbumes con nombre de artista
 $sql_albumes = "SELECT albumes.id, albumes.titulo, artistas.nombre AS artista_nombre 
                 FROM albumes 
                 JOIN artistas ON albumes.artista_id = artistas.id 
@@ -34,15 +32,15 @@ $resultado_albumes = mysqli_query($conexion, $sql_albumes);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Canción - Mi Música</title>
-    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="../css/estilos.css">
 </head>
 <body>
 
-    <?php include 'navbar.php'; ?>
+    <?php include '../navbar.php'; ?>
 
     <h1>Editar Canción</h1>
 
-    <form action="actualizar_cancion.php" method="POST">
+    <form action="actualizar.php" method="POST">
 
         <input type="hidden" name="id" value="<?php echo $cancion['id']; ?>">
 
@@ -75,7 +73,7 @@ $resultado_albumes = mysqli_query($conexion, $sql_albumes);
 
     </form>
 
-    <a href="canciones.php">← Volver a la lista de canciones</a>
+    <a href="index.php">← Volver a la lista de canciones</a>
 
 </body>
 </html>
