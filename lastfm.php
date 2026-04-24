@@ -93,4 +93,36 @@ function lastfm_canciones_album($artista, $album) {
 
     return $datos['album'];
 }
+
+/**
+ * Buscar canciones por nombre
+ */
+function lastfm_buscar_canciones($cancion, $limite = 15) {
+    $datos = lastfm_peticion('track.search', [
+        'track' => $cancion,
+        'limit' => $limite
+    ]);
+
+    if (!$datos || !isset($datos['results']['trackmatches']['track'])) {
+        return [];
+    }
+
+    return $datos['results']['trackmatches']['track'];
+}
+
+/**
+ * Obtener info detallada de una canción (incluyendo álbum y duración)
+ */
+function lastfm_info_cancion($artista, $cancion) {
+    $datos = lastfm_peticion('track.getInfo', [
+        'artist' => $artista,
+        'track' => $cancion
+    ]);
+
+    if (!$datos || !isset($datos['track'])) {
+        return null;
+    }
+
+    return $datos['track'];
+}
 ?>

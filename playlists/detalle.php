@@ -82,12 +82,16 @@ $hay_disponibles = mysqli_num_rows($resultado_disponibles) > 0;
         <?php endif; ?>
     <?php endif; ?>
 
-    <?php if ($hay_disponibles): ?>
-        <div class="agregar-a-playlist">
-            <form action="agregar_cancion.php" method="POST" class="form-inline">
+    <div class="agregar-a-playlist">
+        <a href="buscar_cancion.php?playlist_id=<?php echo $playlist['id']; ?>" class="btn btn-api">
+            🔍 Buscar en Last.fm
+        </a>
+
+        <?php if ($hay_disponibles): ?>
+            <form action="agregar_cancion.php" method="POST" class="form-inline" style="margin-top: 10px;">
                 <input type="hidden" name="playlist_id" value="<?php echo $playlist['id']; ?>">
                 <select name="cancion_id" required>
-                    <option value="">-- Agregar canción --</option>
+                    <option value="">-- Agregar de mi colección --</option>
                     <?php while ($disponible = mysqli_fetch_assoc($resultado_disponibles)): ?>
                         <option value="<?php echo $disponible['id']; ?>">
                             <?php echo htmlspecialchars($disponible['artista_nombre'] . ' — ' . $disponible['titulo']); ?>
@@ -96,12 +100,8 @@ $hay_disponibles = mysqli_num_rows($resultado_disponibles) > 0;
                 </select>
                 <button type="submit" class="btn btn-pequeno">+ Agregar</button>
             </form>
-        </div>
-    <?php else: ?>
-        <p class="detalle-meta" style="margin-top: 15px;">
-            <?php echo $total > 0 ? 'Todas las canciones ya están en esta playlist.' : 'No hay canciones disponibles. Agrega canciones primero.'; ?>
-        </p>
-    <?php endif; ?>
+        <?php endif; ?>
+    </div>
 
     <?php if ($total > 0): ?>
         <div class="lista-canciones">

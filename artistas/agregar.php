@@ -13,13 +13,16 @@
 
     <h1>Agregar Nuevo Artista</h1>
 
-    <form action="guardar.php" method="POST">
+    <form action="guardar.php" method="POST" enctype="multipart/form-data">
 
         <label for="nombre">Nombre del artista:</label>
         <input type="text" id="nombre" name="nombre" required>
 
         <label for="genero">Género musical:</label>
         <input type="text" id="genero" name="genero">
+
+        <label for="imagen">Foto del artista:</label>
+        <input type="file" id="imagen" name="imagen" accept="image/*">
 
         <label for="es_favorito">¿Es favorito?</label>
         <select id="es_favorito" name="es_favorito">

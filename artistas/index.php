@@ -49,7 +49,15 @@ $resultado = mysqli_query($conexion, $sql);
                 <?php while ($artista = mysqli_fetch_assoc($resultado)): ?>
                     <tr>
                         <td>
-                            <a href="detalle.php?id=<?php echo $artista['id']; ?>" class="enlace-nombre">
+                            <a href="detalle.php?id=<?php echo $artista['id']; ?>" class="enlace-nombre artista-fila">
+                                <?php if ($artista['imagen']): ?>
+                                    <img src="../uploads/<?php echo $artista['imagen']; ?>" 
+                                        alt="" class="artista-mini-foto">
+                                <?php else: ?>
+                                    <span class="artista-mini-avatar">
+                                        <?php echo mb_strtoupper(mb_substr($artista['nombre'], 0, 1)); ?>
+                                    </span>
+                                <?php endif; ?>
                                 <?php echo htmlspecialchars($artista['nombre']); ?>
                             </a>
                         </td>

@@ -34,7 +34,7 @@ if (!$artista) {
 
     <h1>Editar Artista</h1>
 
-    <form action="actualizar.php" method="POST">
+    <form action="actualizar.php" method="POST" enctype="multipart/form-data">
 
         <input type="hidden" name="id" value="<?php echo $artista['id']; ?>">
 
@@ -45,6 +45,15 @@ if (!$artista) {
         <label for="genero">Género musical:</label>
         <input type="text" id="genero" name="genero"
                value="<?php echo htmlspecialchars($artista['genero']); ?>">
+
+        <label for="imagen">Foto del artista:</label>
+        <?php if ($artista['imagen']): ?>
+            <div class="imagen-actual">
+                <img src="../uploads/<?php echo $artista['imagen']; ?>" alt="Foto actual" width="150" style="border-radius: 50%;">
+                <p>Foto actual. Selecciona otra imagen para reemplazarla.</p>
+            </div>
+        <?php endif; ?>
+        <input type="file" id="imagen" name="imagen" accept="image/*">
 
         <label for="es_favorito">¿Es favorito?</label>
         <select id="es_favorito" name="es_favorito">

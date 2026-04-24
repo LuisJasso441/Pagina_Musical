@@ -15,5 +15,5 @@ if (!$conexion) {
 }
 
 // Configuramos que use caracteres UTF-8 (para acentos y ñ)
-mysqli_set_charset($conexion, "utf8");
+mysqli_set_charset($conexion, "utf8mb4");
 ?>

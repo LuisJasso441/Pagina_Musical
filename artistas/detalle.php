@@ -55,9 +55,15 @@ $total_albumes = mysqli_num_rows($resultado_albumes);
 
     <!-- CABECERA DEL ARTISTA -->
     <div class="artista-header">
-        <div class="artista-avatar">
-            <?php echo mb_strtoupper(mb_substr($artista['nombre'], 0, 1)); ?>
-        </div>
+        <?php if ($artista['imagen']): ?>
+            <img src="../uploads/<?php echo $artista['imagen']; ?>" 
+                 alt="<?php echo htmlspecialchars($artista['nombre']); ?>"
+                 class="artista-foto">
+        <?php else: ?>
+            <div class="artista-avatar">
+                <?php echo mb_strtoupper(mb_substr($artista['nombre'], 0, 1)); ?>
+            </div>
+        <?php endif; ?>
         <div>
             <h1 class="detalle-titulo">
                 <?php echo htmlspecialchars($artista['nombre']); ?>
