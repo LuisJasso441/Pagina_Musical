@@ -31,6 +31,8 @@ $resultado = mysqli_query($conexion, $sql);
     <?php endif; ?>
 
     <a href="agregar.php" class="btn">+ Agregar nuevo artista</a>
+    <a href="agregar.php" class="btn">+ Agregar manualmente</a>
+    <a href="../api/buscar_artista.php" class="btn btn-api" style="margin-left: 10px;">Buscar en Last.fm</a>
 
     <?php if (mysqli_num_rows($resultado) > 0): ?>
 
@@ -46,7 +48,11 @@ $resultado = mysqli_query($conexion, $sql);
             <tbody>
                 <?php while ($artista = mysqli_fetch_assoc($resultado)): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($artista['nombre']); ?></td>
+                        <td>
+                            <a href="detalle.php?id=<?php echo $artista['id']; ?>" class="enlace-nombre">
+                                <?php echo htmlspecialchars($artista['nombre']); ?>
+                            </a>
+                        </td>
                         <td><?php echo htmlspecialchars($artista['genero']); ?></td>
                         <td><?php echo $artista['es_favorito'] ? '⭐' : '—'; ?></td>
                         <td>
