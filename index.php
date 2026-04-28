@@ -1,3 +1,4 @@
+<?php require 'auth/proteger.php'; ?>
 <?php
 require 'conexion.php';
 

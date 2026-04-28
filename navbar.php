@@ -1,6 +1,10 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 $carpeta_actual = basename(dirname($_SERVER['PHP_SELF']));
-$subcarpetas = ['artistas', 'albumes', 'canciones', 'playlists', 'api', 'descubrimientos'];
+$subcarpetas = ['artistas', 'albumes', 'canciones', 'playlists', 'api'];
 $base = in_array($carpeta_actual, $subcarpetas) ? '../' : '';
 
 $archivo_actual = basename($_SERVER['PHP_SELF']);
@@ -41,11 +45,11 @@ $en_inicio = ($archivo_actual === 'index.php' && !in_array($carpeta_actual, $sub
                 Playlists
             </a>
         </li>
-        <li>
-            <a href="<?php echo $base; ?>descubrimientos/index.php"
-            class="<?php echo $carpeta_actual === 'descubrimientos' ? 'activo' : ''; ?>">
-                Descubrimientos
-            </a>
-        </li>
     </ul>
+    <?php if (isset($_SESSION['username'])): ?>
+        <div class="navbar-usuario">
+            <span class="navbar-username">👤 <?php echo htmlspecialchars($_SESSION['username']); ?></span>
+            <a href="<?php echo $base; ?>auth/logout.php" class="navbar-logout">Salir</a>
+        </div>
+    <?php endif; ?>
 </nav>
