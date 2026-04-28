@@ -33,21 +33,6 @@ mysqli_stmt_bind_param($stmt_canciones, "i", $id);
 mysqli_stmt_execute($stmt_canciones);
 $resultado_canciones = mysqli_stmt_get_result($stmt_canciones);
 $total = mysqli_num_rows($resultado_canciones);
-
-$sql_disponibles = "SELECT canciones.id, canciones.titulo, albumes.titulo AS album_titulo, 
-                           artistas.nombre AS artista_nombre 
-                    FROM canciones 
-                    JOIN albumes ON canciones.album_id = albumes.id 
-                    JOIN artistas ON albumes.artista_id = artistas.id 
-                    WHERE canciones.id NOT IN (
-                        SELECT cancion_id FROM playlist_canciones WHERE playlist_id = ?
-                    ) 
-                    ORDER BY artistas.nombre ASC, albumes.titulo ASC, canciones.titulo ASC";
-$stmt_disp = mysqli_prepare($conexion, $sql_disponibles);
-mysqli_stmt_bind_param($stmt_disp, "i", $id);
-mysqli_stmt_execute($stmt_disp);
-$resultado_disponibles = mysqli_stmt_get_result($stmt_disp);
-$hay_disponibles = mysqli_num_rows($resultado_disponibles) > 0;
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -87,21 +72,112 @@ $hay_disponibles = mysqli_num_rows($resultado_disponibles) > 0;
             🔍 Buscar en Last.fm
         </a>
 
-        <?php if ($hay_disponibles): ?>
-            <form action="agregar_cancion.php" method="POST" class="form-inline" style="margin-top: 10px;">
-                <input type="hidden" name="playlist_id" value="<?php echo $playlist['id']; ?>">
-                <select name="cancion_id" required>
-                    <option value="">-- Agregar de mi colección --</option>
-                    <?php while ($disponible = mysqli_fetch_assoc($resultado_disponibles)): ?>
-                        <option value="<?php echo $disponible['id']; ?>">
-                            <?php echo htmlspecialchars($disponible['artista_nombre'] . ' — ' . $disponible['titulo']); ?>
-                        </option>
-                    <?php endwhile; ?>
-                </select>
-                <button type="submit" class="btn btn-pequeno">+ Agregar</button>
-            </form>
-        <?php endif; ?>
+        <div class="busqueda-local">
+            <div class="busqueda-local-campo">
+                <input type="text" id="busqueda-input" 
+                       placeholder="Buscar en mi colección..." 
+                       autocomplete="off">
+                <div id="busqueda-resultados" class="busqueda-resultados"></div>
+            </div>
+        </div>
     </div>
+
+    <script>
+    var inputBusqueda = document.getElementById('busqueda-input');
+    var contenedorResultados = document.getElementById('busqueda-resultados');
+    var playlistId = <?php echo $playlist['id']; ?>;
+    var temporizador = null;
+
+    inputBusqueda.addEventListener('input', function() {
+        var termino = this.value.trim();
+
+        // Limpiamos el temporizador anterior
+        clearTimeout(temporizador);
+
+        // Si el campo está vacío, ocultamos resultados
+        if (termino.length < 2) {
+            contenedorResultados.innerHTML = '';
+            contenedorResultados.style.display = 'none';
+            return;
+        }
+
+        // Esperamos 300ms después de que el usuario deje de escribir
+        temporizador = setTimeout(function() {
+            buscarCanciones(termino);
+        }, 300);
+    });
+
+    function buscarCanciones(termino) {
+        var url = 'api_buscar_local.php?playlist_id=' + playlistId + '&q=' + encodeURIComponent(termino);
+
+        fetch(url)
+            .then(function(respuesta) {
+                return respuesta.json();
+            })
+            .then(function(canciones) {
+                mostrarResultados(canciones);
+            });
+    }
+
+    function mostrarResultados(canciones) {
+        if (canciones.length === 0) {
+            contenedorResultados.innerHTML = '<div class="busqueda-vacio">No se encontraron canciones</div>';
+            contenedorResultados.style.display = 'block';
+            return;
+        }
+
+        var html = '';
+        for (var i = 0; i < canciones.length; i++) {
+            var c = canciones[i];
+            html += '<div class="busqueda-item">';
+            html += '<div class="busqueda-item-info">';
+            html += '<span class="busqueda-item-titulo">' + c.titulo + '</span>';
+            html += '<span class="busqueda-item-detalle">' + c.artista + ' · ' + c.album + '</span>';
+            html += '</div>';
+            if (c.duracion) {
+                html += '<span class="cancion-duracion">' + c.duracion + '</span>';
+            }
+            html += '<button onclick="agregarCancion(' + c.id + ', this)" class="btn btn-pequeno">+</button>';
+            html += '</div>';
+        }
+
+        contenedorResultados.innerHTML = html;
+        contenedorResultados.style.display = 'block';
+    }
+
+    function agregarCancion(cancionId, boton) {
+        // Deshabilitamos el botón para evitar doble clic
+        boton.disabled = true;
+        boton.textContent = '...';
+
+        // Enviamos la petición POST con fetch
+        var formData = new FormData();
+        formData.append('playlist_id', playlistId);
+        formData.append('cancion_id', cancionId);
+
+        fetch('agregar_cancion.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(function() {
+            // Reemplazamos el botón por una marca de éxito
+            boton.textContent = '✓';
+            boton.classList.add('btn-agregado');
+
+            // Recargamos la página después de un momento para actualizar la lista
+            setTimeout(function() {
+                window.location.reload();
+            }, 500);
+        });
+    }
+
+    // Cerrar resultados al hacer clic fuera
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.busqueda-local')) {
+            contenedorResultados.style.display = 'none';
+        }
+    });
+    </script>
 
     <?php if ($total > 0): ?>
         <div class="lista-canciones">
